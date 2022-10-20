@@ -1,0 +1,46 @@
+﻿@page
+@using WebMovieApp_4_10.Models
+@model WebMovieApp_4_10.Pages.Users.UsersModel
+
+@inject UserManager<ApplicationUser> userManager
+@inject ApplicationDbContext context
+
+@{
+    ViewData["Title"] = "Application Users";
+}
+
+<h2>Actors and Directors</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User Name
+            </th>
+            <th>
+                User Role
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var user in Model.ApplicationUsers)
+        {
+            var role = @Model.Roles.Where(r => r.UserId == user.Id).Select(u => context.Roles.Find(u.RoleId).Name); 
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Fullname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => role)
+                </td>
+                <td>
+                    <form method="post">
+                        <input hidden name="id" value="@user.Id">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

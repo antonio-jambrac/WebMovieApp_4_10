@@ -1,0 +1,60 @@
+﻿@page
+@model WebMovieApp_4_10.Pages.Movies.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Movie</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Movie.Title" class="control-label"></label>
+                <input asp-for="Movie.Title" class="form-control" />
+                <span asp-validation-for="Movie.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.Description" class="control-label"></label>
+                <input asp-for="Movie.Description" class="form-control" />
+                <span asp-validation-for="Movie.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.RecordingStar" class="control-label"></label>
+                <input asp-for="Movie.RecordingStar" class="form-control" />
+                <span asp-validation-for="Movie.RecordingStar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.RecordingFinish" class="control-label"></label>
+                <input asp-for="Movie.RecordingFinish" class="form-control" />
+                <span asp-validation-for="Movie.RecordingFinish" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.Budget" class="control-label"></label>
+                <input asp-for="Movie.Budget" class="form-control" />
+                <span asp-validation-for="Movie.Budget" class="text-danger"></span>
+            </div>
+            @*<div class="form-floating">
+                <select asp-for="Genre" asp-items="@Model.GenreList" class="form-select">
+                    <option disabled selected>--Selecte Genre--</option>
+                </select>
+            </div>*@
+            <div class="form-group mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-page="/Genres/AddGenres" class="btn btn-secondary">Add Genre</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

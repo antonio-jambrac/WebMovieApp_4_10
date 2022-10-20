@@ -1,0 +1,104 @@
+﻿@page
+@using WebMovieApp_4_10.Authorization
+@using WebMovieApp_4_10.Models
+
+@model WebMovieApp_4_10.Pages.Movies.IndexModel
+@inject UserManager<ApplicationUser> Manager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@if (!User.IsInRole(Constraints.ActorRole))
+{
+    <p>
+        <a asp-page="Create">Create New</a> |
+        <a asp-page="Index" asp-route-sortMovies="ture">View my Movies</a>
+    </p>
+}
+<form>
+    <p>
+        Title:  <input type="text" asp-for="SearchString" />
+        <select asp-for="SearchGenre" asp-items="Model.GenresSelectList">
+            <option value="">All</option>
+        </select>
+        <input type="submit" value="Search" />
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].Director)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].Description)
+            </th>
+            <th>
+                Genre
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Movie)
+        {
+            var genres = Model.Genres.Where(g => g.MovieId == item.ID).ToList();
+            var str = "";
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Director)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @foreach(var genre in genres){
+                        if(genres.Count > 1 && genres[genres.Count-1] != genre){
+                            str += (genre.MovieGenre.Genre).ToString() + ", ";
+                        }
+                        else
+                            str += (genre.MovieGenre.Genre).ToString();
+                    }
+                    @Html.DisplayFor(m => str)
+                </td>
+                @if (User.IsInRole(Constraints.ActorRole))
+                {
+                    var isApplied = item.MovieInvites?.Where(i => i.InviterId == Manager.GetUserId(User))
+                                                        .Select(i => i.InviterId).ToString();
+                    if(string.IsNullOrEmpty(isApplied)){
+                        <td>
+                            <button type="submit" class="btn btn-sm btn-secondary" style="pointer-events: none;">Apply for Movie Submitted</button>
+                        </td>
+                    }
+                    else{
+                        <td>
+                            <form method="post">
+                                <input hidden name="actorId" value="@Manager.GetUserId(User)">
+                                <input hidden name="movieId" value="@item.ID">
+                                <button type="submit" class="btn btn-sm btn-primary">Apply For Movie</button>
+                            </form>
+                        </td>
+                    }
+                }
+                else
+                {
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a> |
+                        <a class="btn btn-light" asp-page="./Actors" asp-route-id="@item.ID">View Actors</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

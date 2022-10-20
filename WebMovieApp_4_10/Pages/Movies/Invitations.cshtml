@@ -1,0 +1,62 @@
+﻿@page
+@using WebMovieApp_4_10.Authorization
+@using WebMovieApp_4_10.Models
+@model WebMovieApp_4_10.Pages.Movies.InvitationsModel
+
+<h2>Invitation List</h2>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Movie Title</th>
+                @if(User.IsInRole(Constraints.ActorRole)){
+                    <th>Director</th>
+                }
+                else{
+                    <th>Actor</th>
+                }
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Invites)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Movie.Title)
+                    </td>
+                    @if(User.IsInRole(Constraints.ActorRole)){
+                        <td>
+                            @Html.DisplayFor(model => item.Movie.Director)
+                        </td>
+                    }
+                    else{
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.Fullname)
+                        </td>
+                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td class="input-group">
+                        <form class="pe-2" method="post">
+                            <input hidden name="status" value="@InviteStatus.Accepted">
+                            <input hidden name="id" value="@item.Id">
+                            <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                        </form>
+                        <form class="ps-2" method="post">
+                            <input hidden name="id" value="@item.Id">
+                            <input hidden name="status" value="@InviteStatus.Rejected">
+                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

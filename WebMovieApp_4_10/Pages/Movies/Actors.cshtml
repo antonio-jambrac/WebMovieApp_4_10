@@ -1,0 +1,62 @@
+﻿@page
+@using WebMovieApp_4_10.Models
+@model WebMovieApp_4_10.Pages.Movies.ActorsModel
+
+@{
+    ViewData["Title"] = "Actor List";
+}
+
+<h1>Actor list</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Fullname)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fullname)
+                </td>
+                @if (Model.UserIds.Contains(item.Id))
+                {
+                    {
+                        var userInvite = Model.Invites.First(i => i.ApplicationUserId == item.Id);
+                        var btnStyle = "";
+                        switch(userInvite.Status)
+                        {
+                            case InviteStatus.Accepted:
+                                btnStyle = "btn btn-success";
+                                break;
+                            case InviteStatus.Rejected:
+                                btnStyle = "btn btn-danger";
+                                break;
+                            case InviteStatus.Submitted:
+                                btnStyle = "btn btn-secondary";
+                                break;
+                        }
+                        <td>
+                            <button type="button" class="@btnStyle float-end" style="pointer-events: none;">@userInvite.Status</button>
+                        </td>
+                    }
+                }
+                else
+                {
+                    <td>
+                        <form method="post">
+                            <input hidden name="actorId" value="@item.Id">
+                            <button type="submit" class="btn btn-primary float-end">Invite Actor</button>
+                        </form>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

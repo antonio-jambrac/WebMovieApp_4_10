@@ -1,0 +1,62 @@
+﻿@page
+@model WebMovieApp_4_10.Pages.Genres.AddGenreModel
+
+@{
+    ViewData["Title"] = "Add Genre";
+}
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Genres
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Genres)
+            {
+                var isAdded = Model.MovieGenres.Where(g => g.MovieGenresId == item.ID).ToList();
+                @if (isAdded.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => item.Genre)
+                        </td>
+                        <td>
+                            <form method="post">
+                                <input hidden name="genreId" value="@item.ID">
+                                <button type="submit" class="btn btn-primary float-end">Add</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>Added Genre</th>
+        </tr>
+        @foreach (var item in Model.MovieGenres)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.MovieGenre.Genre)
+                </td>
+                <td>
+                    <form method="post" asp-page-handler="delete">
+                        <input hidden name="movieGenreId" value="@item.Id">
+                        <button type="submit" class="btn btn-danger float-end">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div>
+    <a asp-page="../Movies/Edit" asp-route-id="@Model.MovieId">Back to Edit Movie</a>
+</div>
